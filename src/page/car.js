@@ -6,29 +6,40 @@ import React, {useState, useEffect } from 'react'
 
 export default function Car(){
     const {id} = useParams();
-    const [cars, setcars] = useState([])
-    const [car,setCar]=useState([])
-    useEffect(() => {
+    const [index,setIndex]=useState(0)
+    const [cars, setcars] = useState({})
+    const [car,setCaaar]=useState({})
+
+    useEffect(()=>{
+        if(cars.name)
+        setCaaar(cars.models[index]);
+    },[index])
+    useEffect(async () => {
         var carData = {
-            carName:{id}
+            carName: id
         }
         
-        axios({
+        await axios({
             method:"post",
             url:'http://localhost:8000/api/car',
             data:carData
         })
-        .then((res) =>{
-            console.log(res.data);
+        .then(async (res) =>{
+            console.log(res.data.data[0]);
             
-            setcars(res.data.data);
-            setCar(cars.data.models[0])
+            setcars(res.data.data[0]);
+            setCaaar(res.data.data[0].models[0])
+            console.log(cars)
             
         } )
       .catch(err => console.log(err))
+
+      
     }, [])
     
-    console.log({id})
+   
+    
+    
     return (
         <div>
             <div className="carpage" style={{"background-color":"green",}}>
@@ -42,7 +53,7 @@ export default function Car(){
                 </div>
                 
                 <div className="btn-div">
-                    <Link to="/cars"><button className="btn-div-btn">Order</button></Link>
+                    <Link to={"/order/"+id}><button className="btn-div-btn">Order</button></Link>
                 </div>
             </div>
             
@@ -53,31 +64,83 @@ export default function Car(){
                     </img>
                 </div>
                 <div className="specifications-right">
-                    <h2>{id} Specs</h2>
+                    <h2>{id}  Specs</h2>
+                    {cars.name?
+                        <div>
+                            
+                            {
+                                cars.models.map(item=>{
+                                
+                                return (
+                                    <button style={
+                                        {
+                                            "height":"40px",
+                                            "width":"150px",
+                                            "background-color":"black",
+                                            "border-radius":"15px",
+                                            "margin-right":"5px",
+                                            "color":"white",
+                                            "border":"2px solid white"
+                                        }
+                                        } 
+                                        onClick={()=>{
+                                        setCaaar(item)
+                                    }}>{item.name}</button>
+                                )
+                            })}
+                        </div>:
+                        <div>
+                                gub
+                        </div>}
+                            
+                    <div className="specifications-right-content">
+                    {cars.name?
+                            
+                        <table>
+                           
+                            <tr>
+                                <td>Range</td>
+                                <td>Power Train</td>
+                            </tr>
+                            <tr>
+                                <td>{car["Range"]}</td>
+                                <td>{car["Power Train"]}</td>
+                            </tr>
+                            <tr>
+                                <td>Peak Power</td>
+                                <td>Acceleration</td>
+                            </tr>
+                            <tr>
+                                <td>{car["Peak Power"]}</td>
+                                <td>{car["Acceleration"]}</td>
+                            </tr>
+                            <tr>
+                                <td>Top Speed</td>
+                                <td>Drag Coefficient</td>
+                            </tr>
+                            <tr>
+                                <td>{car["Top Speed"]}</td>
+                                <td>{car["Drag Coefficient"]}</td>
+                            </tr>
+                            <tr>
+                                <td>Weight</td>
+                                <td>Wheels</td>
+                            </tr>
+                            <tr>
+                                <td>{car["Weight"]}</td>
+                                <td>{car["Wheels"]}</td>
+                            </tr>
+                            <tr>
+                                <td>Cargo Capacity</td>
+                                <td>Charging</td>
+                            </tr>
+                            <tr>
+                                <td>{car["Cargo Capacity"]}</td>
+                                <td>{car["Charging"]}</td>
+                            </tr>
 
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>Range</span>
-                        <span style={{"float":"right"}}>Power Train</span>
-                    </div>
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>{car["Range"]}</span>
-                        <span style={{"float":"right"}}>Power Train</span>
-                    </div>
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>Peak Power</span>
-                        <span style={{"float":"right"}}>Acceleration</span>
-                    </div>
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>Range</span>
-                        <span style={{"float":"right"}}>Power Train</span>
-                    </div>
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>Top Speed</span>
-                        <span style={{"float":"right"}}>Drag Coefficient</span>
-                    </div>
-                    <div className="specs-span">
-                        <span style={{"float":"left"}}>Top Speed</span>
-                        <span style={{"float":"right"}}>Drag Coefficient</span>
+                        </table>
+                      :<div></div>}
                     </div>
 
                 </div>
